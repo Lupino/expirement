@@ -1,5 +1,6 @@
 import mysql from 'mysql';
 import { SearchService } from 'yuntan-service';
+import eachLimit from 'async/eachLimit';
 
 const searchSrv = new SearchService({
   host: 'https://gw.huabot.com',
@@ -7,6 +8,8 @@ const searchSrv = new SearchService({
   key: 'a54ec9e66bca54fc31a1',
   secure: true
 });
+
+const docIndex = promiseToCallback(searchSrv.docIndex.bind(searchSrv))
 
 const connection = mysql.createConnection({
   host     : 'localhost',
@@ -81,6 +84,11 @@ const mapping = {
 };
 
 
+function clean_html(content) {
+  return content.replace(/<[^>]*>/g, '');
+}
+
+
 function processIndex(callback) {
   function loopIndex(offset) {
     connection.query(`SELECT * FROM wenshu WHERE id > "${offset}" ORDER BY id ASC LIMIT 100`, (err, results) => {
@@ -91,27 +99,26 @@ function processIndex(callback) {
         return callback();
       }
       console.log('process index offset', offset, 'size:', results.length);
-      promiseToCallback(async () => {
-        for (let data of results) {
-          let { id, content, court_name, date, name, number, process, type } = data;
-          await searchSrv.docIndex('wenshu', data.id, {
-            id,
-            content,
-            court_name,
-            date: Math.floor(new Date(date) / 1000),
-            name,
-            number,
-            process,
-            type
-          });
-        }
-      })((err) => {
+      eachLimit(results, 20, (data, done) => {
+        let { id, content, court_name, date, name, number, process, type } = data;
+        docIndex('wenshu', data.id, {
+          id,
+          content: clean_html(content),
+          court_name,
+          date: Math.floor(new Date(date) / 1000),
+          name,
+          number,
+          process,
+          type
+        }, done);
+      }, (err) => {
         if (err) {
           console.log(err);
         }
         const offset = results[results.length - 1].id;
         loopIndex(offset);
-      })
+
+      });
     });
   }
   loopIndex('');
