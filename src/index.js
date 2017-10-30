@@ -135,7 +135,17 @@ async function main() {
   await callbackToPromise(processIndex)();
 }
 
-promiseToCallback(main)((err) => {
-  console.log(err);
-  console.log('Finish.');
+async function search() {
+  const searchResult = await searchSrv.search('wenshu', {query: {query: '你好'}});
+  console.log(searchResult);
+}
+
+// promiseToCallback(main)((err) => {
+//   console.log(err);
+//   console.log('Finish.');
+// });
+
+promiseToCallback(search)((err) => {
+   console.log(err);
+   console.log('Finish.');
 });
