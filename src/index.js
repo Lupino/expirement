@@ -1,13 +1,8 @@
 import mysql from 'mysql';
-import { SearchService } from 'yuntan-service';
 import eachLimit from 'async/eachLimit';
 
-const searchSrv = new SearchService({
-  host: 'https://gw.huabot.com',
-  secret: 'abfbc25c8ea2969a4f4dac8f0b161d274847554508b87ed182551627e9749fc0',
-  key: 'a54ec9e66bca54fc31a1',
-  secure: true
-});
+import { promiseToCallback, callbackToPromise, searchSrv } from './utils';
+
 
 const docIndex = promiseToCallback(searchSrv.docIndex.bind(searchSrv))
 
@@ -19,36 +14,6 @@ const connection = mysql.createConnection({
 });
 
 connection.connect();
-
-// connection.query('SELECT id FROM wenshu where id < "ffffd1c4-a352-4fe3-8b48-c654a3cb7cbb" order by id desc limit 1,2', (error, results, fields) => {
-//   if (error) throw error;
-//   console.log('The solution is: ', results);
-//   for (let data of results) {
-//     console.log(data.id)
-//   }
-// });
-//
-// connection.end();
-
-export function promiseToCallback(promiseFunction) {
-  return (...argv) => {
-    const callback = argv.pop();
-    promiseFunction(...argv)
-      .then((...ret) => callback(null, ...ret))
-      .catch((err) => callback(err));
-  };
-}
-
-export function callbackToPromise(callbackFunction) {
-  return (...argv) => {
-    return new Promise((resolve, reject) => {
-      callbackFunction(...argv, (err, ...ret) => {
-        if (err) return reject(err);
-        resolve(...ret);
-      });
-    });
-  };
-}
 
 const mapping = {
   'default_mapping': {
@@ -135,17 +100,7 @@ async function main() {
   await callbackToPromise(processIndex)();
 }
 
-async function search() {
-  const searchResult = await searchSrv.search('wenshu', {query: {query: '你好'}});
-  console.log(searchResult);
-}
-
-// promiseToCallback(main)((err) => {
-//   console.log(err);
-//   console.log('Finish.');
-// });
-
-promiseToCallback(search)((err) => {
-   console.log(err);
-   console.log('Finish.');
+promiseToCallback(main)((err) => {
+  console.log(err);
+  console.log('Finish.');
 });
