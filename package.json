@@ -2,11 +2,11 @@
   "name": "wenshu",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "NODE_ENV=production node lib/main.js",
+    "start": "NODE_ENV=production node dist/main.js",
     "dev": "nodemon -w src node_modules/babel-cli/bin/babel-node.js --presets=env,stage-3 src/main.js",
-    "compile": "babel --plugins=transform-runtime --presets env,stage-3 -d lib src",
+    "compile": "babel --plugins=transform-runtime --presets env,stage-3 -d dist src",
     "next-build": "next build"
   },
   "author": "",
