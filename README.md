@@ -8,7 +8,7 @@ cd expirement
 npm install
 npm run compile
 # index wenshu
-node lib/index.js
+node dist/index.js
 # search wenshu
-node lib/search.js
+node dist/search.js
 ```
