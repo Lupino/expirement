@@ -15,13 +15,18 @@
     "async": "^2.5.0",
     "babel-runtime": "^6.26.0",
     "express": "^4.16.2",
+    "form-data": "^2.3.1",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash.keys": "^4.2.0",
     "material-ui": "^0.19.4",
     "method-override": "^2.3.10",
     "mysql": "github:mysqljs/mysql",
     "next": "^4.1.4",
     "prop-types": "^15.6.0",
+    "query-string": "^5.0.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-render-html": "^0.5.2",
     "yuntan-service": "^1.0.23"
   },
   "devDependencies": {

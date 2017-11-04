@@ -40,7 +40,31 @@ export function route(app) {
           score: hit.score,
         }
       })
-      sendJsonResponse(res, err, { total_hits: ret.total_hits, hits });
+      fillDocumentName(hits, (_, hits) => {
+        sendJsonResponse(res, err, { total_hits: ret.total_hits, hits });
+      })
     })
+  });
+}
+
+function fillDocumentName(hits, callback) {
+  const ids = hits.map(({id}) => id);
+  if (ids.length === 0) {
+    return callback(null, hits);
+  }
+  mysql.query(`SELECT id, name FROM wenshu WHERE id in ("${ids.join('", "')}")`, (err, results) => {
+    let retMap = {};
+    results = results || [];
+    for (let one of results) {
+      retMap[one.id] = one;
+    }
+    console.log(retMap)
+    hits = hits.map((hit) => {
+      if (retMap[hit.id]) {
+        hit.name = retMap[hit.id].name;
+      }
+      return hit;
+    })
+    callback(null, hits);
   });
 }
