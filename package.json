@@ -22,7 +22,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "yuntan-service": "^1.0.22"
+    "yuntan-service": "^1.0.23"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
