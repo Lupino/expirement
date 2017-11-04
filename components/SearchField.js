@@ -41,6 +41,7 @@ export default class SearchField extends Component {
           value={query}
           onChange={this.handleChange.bind(this)}
           onKeyPress={this.handleKeyPress.bind(this)}
+          fullWidth={true}
         />
         <IconButton icon='search' className='search-btn'
           style={{position: 'absolute', top: 0, right: -13}}
