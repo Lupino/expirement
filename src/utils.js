@@ -1,3 +1,6 @@
+import { SearchService } from 'yuntan-service';
+import mysqlLib from 'mysql';
+
 export function promiseToCallback(promiseFunction) {
   return (...argv) => {
     const callback = argv.pop();
@@ -18,11 +21,18 @@ export function callbackToPromise(callbackFunction) {
   };
 }
 
-import { SearchService } from 'yuntan-service';
-
 export const searchSrv = new SearchService({
   host: 'https://gw.huabot.com',
   secret: 'abfbc25c8ea2969a4f4dac8f0b161d274847554508b87ed182551627e9749fc0',
   key: 'a54ec9e66bca54fc31a1',
   secure: true
+});
+
+
+export const mysql = mysqlLib.createPool({
+  connectionLimit : 100,
+  host     : 'localhost',
+  user     : 'root',
+  database : 'wenshu',
+  charset  : 'utf8',
 });

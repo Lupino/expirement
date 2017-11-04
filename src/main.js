@@ -6,6 +6,7 @@ import path from 'path';
 
 import next from 'next';
 import {promiseToCallback} from './utils';
+import { route } from './api';
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({dev});
@@ -22,6 +23,7 @@ promiseToCallback(app.prepare.bind(app))((err) => {
   server.use(bodyParser.urlencoded({extended: false, limit: '512kb'}));
   server.use(bodyParser.json());
   server.use(methodOverride());
+  route(server);
 
   server.get('*', (req, res) => {
     return handle(req, res);
