@@ -30,9 +30,16 @@ export function route(app) {
     });
   });
   app.get('/api/search/', (req, res) => {
-    const query = req.query;
-    const highlight = {fields: ['content']};
-    promiseToCallback(searchSrv.search.bind(searchSrv))('wenshu', {query, highlight}, (err, ret={hits: []}) => {
+    const query = req.query.query;
+    const from = Number(req.query.from) || 0;
+    const size = Number(req.query.size) || 10;
+    const searchQuery = {
+      query: { query },
+      size,
+      from,
+      highlight: {fields: ['content']}
+    };
+    promiseToCallback(searchSrv.search.bind(searchSrv))('wenshu', searchQuery, (err, ret={hits: []}) => {
       const hits = ret.hits.map((hit) => {
         return {
           id: hit.id,
@@ -41,7 +48,7 @@ export function route(app) {
         }
       })
       fillDocumentName(hits, (_, hits) => {
-        sendJsonResponse(res, err, { total_hits: ret.total_hits, hits });
+        sendJsonResponse(res, err, { total_hits: ret.total_hits, hits, from, size });
       })
     })
   });
@@ -58,7 +65,6 @@ function fillDocumentName(hits, callback) {
     for (let one of results) {
       retMap[one.id] = one;
     }
-    console.log(retMap)
     hits = hits.map((hit) => {
       if (retMap[hit.id]) {
         hit.name = retMap[hit.id].name;

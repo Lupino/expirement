@@ -19,7 +19,9 @@ export default class Layout extends Component {
           <meta httpEquiv="cleartype" content="on" />
           <style>{'body { margin: 0 }'}</style>
         </Head>
-        {children}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {children}
+        </div>
       </div>
     );
   }
