@@ -20,7 +20,7 @@ function getCustemMuiTheme(userAgent) {
   });
 }
 
-export default (Component, requireLogin = false) => {
+export default (Component) => {
   return class extends ReactComponent {
     static async getInitialProps({ req, res, ...ctx }) {
       let props;
